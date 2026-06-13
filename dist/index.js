@@ -34,7 +34,9 @@ function isNull(payload) {
 function isPlainObject(payload) {
     if (getType(payload) !== 'Object')
         return false;
-    return payload.constructor === Object && Object.getPrototypeOf(payload) === Object.prototype;
+    const prototype = Object.getPrototypeOf(payload);
+    return (prototype === null ||
+        (prototype.constructor === Object && prototype === Object.prototype));
 }
 /**
  * Returns whether the payload is a plain JavaScript object (excluding special classes or objects with other prototypes)
@@ -307,17 +309,16 @@ function isOneOf(a, b, c, d, e) {
  * @template T
  * @param {*} payload
  * @param {T} type
- * @throws {TypeError} Will throw type error if type is an invalid type
+ * @throws {TypeError} Will throw a type error if `type` is not a function
  * @returns {payload is T}
  */
 function isType(payload, type) {
     if (!(type instanceof Function)) {
         throw new TypeError('Type must be a function');
     }
-    if (!Object.prototype.hasOwnProperty.call(type, 'prototype')) {
-        throw new TypeError('Type is not a class');
-    }
-    // Classes usually have names (as functions usually have names)
+    // Constructable types (classes / regular functions) carry a name we can match against
+    // `getType()`. Non-constructable functions (arrow / async / bound / methods) have no own
+    // `prototype`; they can never have produced `payload`, so the checks below resolve to `false`.
     const name = type.name;
     return getType(payload) === name || Boolean(payload && payload.constructor === type);
 }

@@ -38,16 +38,29 @@ export function isNull(payload: any): payload is null {
 /**
  * Returns whether the payload is a plain JavaScript object (excluding special classes or objects with other prototypes)
  *
+ * Returns `true` for:
+ * - object literals and `new Object()` (prototype is `Object.prototype`)
+ * - null-prototype objects created via `Object.create(null)`, which are commonly used as plain data bags
+ *
+ * Returns `false` for class instances, arrays, dates and any other object whose prototype is neither
+ * `Object.prototype` nor `null`.
+ *
  * @param {*} payload
  * @returns {payload is PlainObject}
  */
 export function isPlainObject(payload: any): payload is PlainObject {
   if (getType(payload) !== 'Object') return false
-  return payload.constructor === Object && Object.getPrototypeOf(payload) === Object.prototype
+  const prototype = Object.getPrototypeOf(payload)
+  return (
+    prototype === null || (prototype.constructor === Object && prototype === Object.prototype)
+  )
 }
 
 /**
- * Returns whether the payload is a plain JavaScript object (excluding special classes or objects with other prototypes)
+ * Returns whether the payload is a plain JavaScript object.
+ *
+ * Alias of {@link isPlainObject} — kept for backwards compatibility. Prefer `isPlainObject`,
+ * since `isObject` only checks for *plain* objects and not "any object".
  *
  * @param {*} payload
  * @returns {payload is PlainObject}
@@ -77,7 +90,12 @@ export function isFullObject(payload: any): payload is PlainObject {
 }
 
 /**
- * Returns whether the payload is an any kind of object (including special classes or objects with different prototypes)
+ * Returns whether the payload is any kind of object (including special classes or objects with different prototypes)
+ *
+ * Returns `true` for anything that reports as `'Object'` via {@link getType}: plain object literals,
+ * null-prototype objects (`Object.create(null)`) and class instances alike.
+ *
+ * Returns `false` for arrays, dates, maps, sets, etc. which report their own specific type.
  *
  * @param {*} payload
  * @returns {payload is PlainObject}
@@ -376,20 +394,24 @@ export function isOneOf(
  * In cases like Number, it will return true for NaN as NaN is a Number (thanks javascript!);
  * It will, however, differentiate between object and null
  *
+ * `type` must be a function (a class or constructor). Passing a non-function is a programmer
+ * error and throws a `TypeError`. Functions that can never construct a value — arrow functions,
+ * async functions, bound functions and object methods — simply never match a payload and return
+ * `false` instead of throwing, so the result stays predictable for any function shape.
+ *
  * @template T
  * @param {*} payload
  * @param {T} type
- * @throws {TypeError} Will throw type error if type is an invalid type
+ * @throws {TypeError} Will throw a type error if `type` is not a function
  * @returns {payload is T}
  */
 export function isType<T extends AnyFunction | AnyClass>(payload: any, type: T): payload is T {
   if (!(type instanceof Function)) {
     throw new TypeError('Type must be a function')
   }
-  if (!Object.prototype.hasOwnProperty.call(type, 'prototype')) {
-    throw new TypeError('Type is not a class')
-  }
-  // Classes usually have names (as functions usually have names)
-  const name: string | undefined | null = (type as any).name
+  // Constructable types (classes / regular functions) carry a name we can match against
+  // `getType()`. Non-constructable functions (arrow / async / bound / methods) have no own
+  // `prototype`; they can never have produced `payload`, so the checks below resolve to `false`.
+  const name: string = (type as any).name
   return getType(payload) === name || Boolean(payload && payload.constructor === type)
 }
