@@ -242,6 +242,174 @@ export function isWeakSet(payload: any): payload is WeakSet<any> {
 }
 
 /**
+ * Returns whether the payload is a typed array (Int8Array, Uint8Array, etc.)
+ *
+ * @param {*} payload
+ * @returns {payload is ArrayBufferView}
+ */
+export function isTypedArray(payload: any): payload is ArrayBufferView {
+  return ArrayBuffer.isView(payload) && !(payload instanceof DataView)
+}
+
+/**
+ * Returns whether the payload is an Int8Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int8Array}
+ */
+export function isInt8Array(payload: any): payload is Int8Array {
+  return getType(payload) === 'Int8Array'
+}
+
+/**
+ * Returns whether the payload is a Uint8Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint8Array}
+ */
+export function isUint8Array(payload: any): payload is Uint8Array {
+  return getType(payload) === 'Uint8Array'
+}
+
+/**
+ * Returns whether the payload is a Uint8ClampedArray
+ *
+ * @param {*} payload
+ * @returns {payload is Uint8ClampedArray}
+ */
+export function isUint8ClampedArray(payload: any): payload is Uint8ClampedArray {
+  return getType(payload) === 'Uint8ClampedArray'
+}
+
+/**
+ * Returns whether the payload is an Int16Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int16Array}
+ */
+export function isInt16Array(payload: any): payload is Int16Array {
+  return getType(payload) === 'Int16Array'
+}
+
+/**
+ * Returns whether the payload is a Uint16Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint16Array}
+ */
+export function isUint16Array(payload: any): payload is Uint16Array {
+  return getType(payload) === 'Uint16Array'
+}
+
+/**
+ * Returns whether the payload is an Int32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int32Array}
+ */
+export function isInt32Array(payload: any): payload is Int32Array {
+  return getType(payload) === 'Int32Array'
+}
+
+/**
+ * Returns whether the payload is a Uint32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint32Array}
+ */
+export function isUint32Array(payload: any): payload is Uint32Array {
+  return getType(payload) === 'Uint32Array'
+}
+
+/**
+ * Returns whether the payload is a Float32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Float32Array}
+ */
+export function isFloat32Array(payload: any): payload is Float32Array {
+  return getType(payload) === 'Float32Array'
+}
+
+/**
+ * Returns whether the payload is a Float64Array
+ *
+ * @param {*} payload
+ * @returns {payload is Float64Array}
+ */
+export function isFloat64Array(payload: any): payload is Float64Array {
+  return getType(payload) === 'Float64Array'
+}
+
+/**
+ * Returns whether the payload is a BigInt64Array
+ *
+ * @param {*} payload
+ * @returns {payload is BigInt64Array}
+ */
+export function isBigInt64Array(payload: any): payload is BigInt64Array {
+  return getType(payload) === 'BigInt64Array'
+}
+
+/**
+ * Returns whether the payload is a BigUint64Array
+ *
+ * @param {*} payload
+ * @returns {payload is BigUint64Array}
+ */
+export function isBigUint64Array(payload: any): payload is BigUint64Array {
+  return getType(payload) === 'BigUint64Array'
+}
+
+/**
+ * Returns whether the payload is a Generator object (the iterator returned by a generator function)
+ *
+ * @param {*} payload
+ * @returns {payload is Generator}
+ */
+export function isGenerator(payload: any): payload is Generator {
+  return (
+    payload !== null &&
+    typeof payload === 'object' &&
+    payload[Symbol.toStringTag] === 'Generator'
+  )
+}
+
+/**
+ * Returns whether the payload is an AsyncGenerator object
+ *
+ * @param {*} payload
+ * @returns {payload is AsyncGenerator}
+ */
+export function isAsyncGenerator(payload: any): payload is AsyncGenerator {
+  return (
+    payload !== null &&
+    typeof payload === 'object' &&
+    payload[Symbol.toStringTag] === 'AsyncGenerator'
+  )
+}
+
+/**
+ * Returns whether the payload is a GeneratorFunction
+ *
+ * @param {*} payload
+ * @returns {payload is GeneratorFunction}
+ */
+export function isGeneratorFunction(payload: any): payload is GeneratorFunction {
+  return typeof payload === 'function' && payload[Symbol.toStringTag] === 'GeneratorFunction'
+}
+
+/**
+ * Returns whether the payload is an AsyncGeneratorFunction
+ *
+ * @param {*} payload
+ * @returns {payload is AsyncGeneratorFunction}
+ */
+export function isAsyncGeneratorFunction(payload: any): payload is AsyncGeneratorFunction {
+  return typeof payload === 'function' && payload[Symbol.toStringTag] === 'AsyncGeneratorFunction'
+}
+
+/**
  * Returns whether the payload is a Symbol
  *
  * @param {*} payload
@@ -249,6 +417,16 @@ export function isWeakSet(payload: any): payload is WeakSet<any> {
  */
 export function isSymbol(payload: any): payload is symbol {
   return getType(payload) === 'Symbol'
+}
+
+/**
+ * Returns whether the payload is a BigInt
+ *
+ * @param {*} payload
+ * @returns {payload is bigint}
+ */
+export function isBigInt(payload: any): payload is bigint {
+  return getType(payload) === 'BigInt'
 }
 
 /**
@@ -312,21 +490,22 @@ export function isNaNValue(payload: any): payload is typeof NaN {
 }
 
 /**
- * Returns whether the payload is a primitive type (eg. Boolean | Null | Undefined | Number | String | Symbol)
+ * Returns whether the payload is a primitive type (eg. Boolean | Null | Undefined | Number | String | Symbol | BigInt)
  *
  * @param {*} payload
- * @returns {(payload is boolean | null | undefined | number | string | symbol)}
+ * @returns {(payload is boolean | null | undefined | number | string | symbol | bigint)}
  */
 export function isPrimitive(
   payload: any
-): payload is boolean | null | undefined | number | string | symbol {
+): payload is boolean | null | undefined | number | string | symbol | bigint {
   return (
     isBoolean(payload) ||
     isNull(payload) ||
     isUndefined(payload) ||
     isNumber(payload) ||
     isString(payload) ||
-    isSymbol(payload)
+    isSymbol(payload) ||
+    isBigInt(payload)
   )
 }
 
