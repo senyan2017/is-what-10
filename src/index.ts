@@ -110,6 +110,26 @@ export function isFunction(payload: any): payload is AnyFunction {
 }
 
 /**
+ * Returns whether the payload is a generator function (`function* () {}`)
+ *
+ * @param {*} payload
+ * @returns {payload is GeneratorFunction}
+ */
+export function isGeneratorFunction(payload: any): payload is GeneratorFunction {
+  return getType(payload) === 'GeneratorFunction'
+}
+
+/**
+ * Returns whether the payload is an async generator function (`async function* () {}`)
+ *
+ * @param {*} payload
+ * @returns {payload is AsyncGeneratorFunction}
+ */
+export function isAsyncGeneratorFunction(payload: any): payload is AsyncGeneratorFunction {
+  return getType(payload) === 'AsyncGeneratorFunction'
+}
+
+/**
  * Returns whether the payload is an array
  *
  * @param {any} payload
@@ -137,6 +157,116 @@ export function isFullArray(payload: any): payload is any[] {
  */
 export function isEmptyArray(payload: any): payload is [] {
   return isArray(payload) && payload.length === 0
+}
+
+/**
+ * Returns whether the payload is an Int8Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int8Array}
+ */
+export function isInt8Array(payload: any): payload is Int8Array {
+  return getType(payload) === 'Int8Array'
+}
+
+/**
+ * Returns whether the payload is a Uint8Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint8Array}
+ */
+export function isUint8Array(payload: any): payload is Uint8Array {
+  return getType(payload) === 'Uint8Array'
+}
+
+/**
+ * Returns whether the payload is a Uint8ClampedArray
+ *
+ * @param {*} payload
+ * @returns {payload is Uint8ClampedArray}
+ */
+export function isUint8ClampedArray(payload: any): payload is Uint8ClampedArray {
+  return getType(payload) === 'Uint8ClampedArray'
+}
+
+/**
+ * Returns whether the payload is an Int16Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int16Array}
+ */
+export function isInt16Array(payload: any): payload is Int16Array {
+  return getType(payload) === 'Int16Array'
+}
+
+/**
+ * Returns whether the payload is a Uint16Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint16Array}
+ */
+export function isUint16Array(payload: any): payload is Uint16Array {
+  return getType(payload) === 'Uint16Array'
+}
+
+/**
+ * Returns whether the payload is an Int32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Int32Array}
+ */
+export function isInt32Array(payload: any): payload is Int32Array {
+  return getType(payload) === 'Int32Array'
+}
+
+/**
+ * Returns whether the payload is a Uint32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Uint32Array}
+ */
+export function isUint32Array(payload: any): payload is Uint32Array {
+  return getType(payload) === 'Uint32Array'
+}
+
+/**
+ * Returns whether the payload is a Float32Array
+ *
+ * @param {*} payload
+ * @returns {payload is Float32Array}
+ */
+export function isFloat32Array(payload: any): payload is Float32Array {
+  return getType(payload) === 'Float32Array'
+}
+
+/**
+ * Returns whether the payload is a Float64Array
+ *
+ * @param {*} payload
+ * @returns {payload is Float64Array}
+ */
+export function isFloat64Array(payload: any): payload is Float64Array {
+  return getType(payload) === 'Float64Array'
+}
+
+/**
+ * Returns whether the payload is a BigInt64Array
+ *
+ * @param {*} payload
+ * @returns {payload is BigInt64Array}
+ */
+export function isBigInt64Array(payload: any): payload is BigInt64Array {
+  return getType(payload) === 'BigInt64Array'
+}
+
+/**
+ * Returns whether the payload is a BigUint64Array
+ *
+ * @param {*} payload
+ * @returns {payload is BigUint64Array}
+ */
+export function isBigUint64Array(payload: any): payload is BigUint64Array {
+  return getType(payload) === 'BigUint64Array'
 }
 
 /**
@@ -179,6 +309,16 @@ export function isEmptyString(payload: any): payload is string {
  */
 export function isNumber(payload: any): payload is number {
   return getType(payload) === 'Number' && !isNaN(payload)
+}
+
+/**
+ * Returns whether the payload is a bigint
+ *
+ * @param {*} payload
+ * @returns {payload is bigint}
+ */
+export function isBigInt(payload: any): payload is bigint {
+  return getType(payload) === 'BigInt'
 }
 
 /**
